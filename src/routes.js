@@ -11,7 +11,7 @@ import AppPage from './components/AppPage.react'
 import App from './containers/App.react'
 import Dashboard from './containers/Dashboard.react'
 import LoginPage from './containers/LoginPage.react'
-import ParseApp from './containers/ParseApp.react'
+import PushComposePanel from './containers/PushComposePanel.react'
 
 
 export default (
@@ -28,7 +28,7 @@ export default (
       <Route path="apps" component={AppPage} />
       <Route path="apps/:app_id">
         <IndexRoute component={AppPage} />
-        <Route path="push" component={ParseApp}/>
+        <Route path="push" component={PushComposePanel}/>
       </Route>
     </Route>
 
