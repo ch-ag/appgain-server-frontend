@@ -376,7 +376,7 @@ class ParseApp extends React.Component {
     const {push_message_chars, selected_app, push_status,
       push_submit_disabled, push_clear_disabled, push_scheded} = this.state
     const is_uri = {
-      matchRegexp: /^(\w+:\/\/)([\da-z\.-]+)?\.?([\/\w \.-]*)*\/?$/
+      matchRegexp: /^(\w+:\/\/)([\da-z\.-]+)?\.?([\/\w \.-]*)*\/?(\?([\/\w \.-\=\&]*)*)?$/
     }
 
     let PushStatusSnackbar = (push_status) => {
