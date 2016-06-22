@@ -16,7 +16,7 @@ class SuitApi {
 
     let push_req = {
       method: 'post',
-      endpoint: '/push/1',
+      endpoint: '/push',
       payload: {
         where: {},
         data: {
