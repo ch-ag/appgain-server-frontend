@@ -1,12 +1,25 @@
 import * as ActionTypes from './actionTypes'
-import {saveState} from '../store/localStore'
+import {getFromLcoalState, saveToLcoalState} from '../store/localStore'
+
+
+export function loadLocalState() {
+
+  return {
+    type: 'LOAD_LOCAL_STATE',
+    user_creds: getFromLcoalState('user_creds'),
+    current_user: getFromLcoalState('current_user'),
+    user_suits: getFromLcoalState('user_suits')
+  }
+}
 
 //////////////////////////////////////////////
 // User
 //
 
+
+
 export function loginStart(user_creds) {
-  saveState({user_creds})
+  saveToLcoalState({user_creds})
   return {
     type: ActionTypes.LOGIN_START,
     user_creds,
@@ -15,7 +28,7 @@ export function loginStart(user_creds) {
 }
 
 export function loginSuccess(current_user) {
-  saveState({current_user})
+  saveToLcoalState({current_user})
   return {
     type: ActionTypes.LOGIN_SUCCESS,
     current_user,
@@ -24,7 +37,7 @@ export function loginSuccess(current_user) {
 }
 
 export function loginFaild(error) {
-  saveState({user_creds: null, current_user:null})
+  saveToLcoalState({user_creds: null, current_user:null})
   return {
     type: ActionTypes.LOGIN_FAILD,
     current_user: null,
@@ -34,7 +47,7 @@ export function loginFaild(error) {
 }
 
 export function logoutUser(error) {
-  saveState({user_creds: null, current_user:null})
+  saveToLcoalState({user_creds: null, current_user:null})
   return {
     type: ActionTypes.LOGOUT_USER,
     current_user: null,
