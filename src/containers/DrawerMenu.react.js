@@ -43,6 +43,21 @@ const styles = {
     height: (100 - (55*100)/window_size.height) + '%'
   },
 
+  drawerProfile: {
+    bottom: '25px',
+    position: 'absolute',
+    width: '100%'
+  },
+
+  drawerVersion: {
+    bottom: '3px',
+    position: 'absolute',
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 13,
+    opacity: 0.7,
+  },
+
   listRightCircularProgress:{
     right: 30,
     margin:0
@@ -68,7 +83,8 @@ class DrawerMenu extends React.Component {
     const {current_user, user_apps, drawerOpen, location,
       router, onNavChange} = this.props
 
-    let drawer_ready = (user_apps.length > 0)
+    let drawer_ready = (typeof user_apps === 'object' && user_apps.length > 0)
+    let drawer_has_apps = (typeof user_apps === 'object'? user_apps.length : 0 )
     let drawer_items = []
     let drawer_view = location.pathname
     let selected_app = null
@@ -134,7 +150,6 @@ class DrawerMenu extends React.Component {
       return letters
     }
 
-
     let UserAvatar = (user) => {
       try {
         return (<Avatar style={{width:40,height:40,margin:5}}  src={`https://www.gravatar.com/avatar/${md5(user.email)}?d=identicon&f=y`} />)
@@ -153,7 +168,8 @@ class DrawerMenu extends React.Component {
       BACK_DASHBOARD: (<ListItem key="dashboard" value="/dashboard" primaryText="Dashboard" leftIcon={<SVGNavigationArrowBack/>} />),
       APPS: (<ListItem key="dashboard-apps" value="/dashboard/apps" primaryText="Apps" leftIcon={<SVGNavigationApps />} />),
       BACK_APPS: (<ListItem key="dashboard-apps" value="/dashboard/apps" primaryText="Apps" leftIcon={<SVGNavigationArrowBack />} />),
-      PROFILE: (<ListItem key="dashboard-profile" value="/dashboard/profile" primaryText="Profile" secondaryText={the_current_user.email} leftIcon={UserAvatar(the_current_user)} />),
+      BUSY_APPS: (<ListItem key="dashboard-app-busy" value="#" disabled={true} primaryText="Apps" leftIcon={<SVGNavigationApps />} rightIcon={<CircularProgress style={styles.listLeftCircularProgress} size={0.3}/>} />),
+      PROFILE: (<ListItem style={styles.drawerProfile} key="dashboard-profile" value="/dashboard/profile" primaryText="Profile" secondaryText={the_current_user.email} leftIcon={UserAvatar(the_current_user)} />),
       SUPPORT: (<ListItem key="dashboard-support" value="/dashboard/support" primaryText="Support" leftIcon={<SVGSocialPersonOutline />} />),
     }
 
@@ -178,16 +194,16 @@ class DrawerMenu extends React.Component {
     switch (drawer_view) {
       case '/dashboard':
         drawer_items = []
+
         drawer_items.push(dmi.DASHBOARD)
         drawer_items.push(dmi.APPS)
         drawer_items.push(dmi.PROFILE)
-        drawer_items.push()
         break;
       case '/dashboard/profile':
         drawer_items = []
         drawer_items.push(dmi.BACK_DASHBOARD)
         drawer_items.push(<Divider />)
-        drawer_items.push(dmi.PROFILE)
+        // drawer_items.push(dmi.PROFILE)
 
         break;
       case '/dashboard/apps':
@@ -195,18 +211,22 @@ class DrawerMenu extends React.Component {
         drawer_items.push(dmi.BACK_DASHBOARD)
         drawer_items.push(<Divider key="divider-dashboard-apps"/>)
         drawer_items.push(<Subheader key="subheader-dashboard-apps">Your Apps</Subheader>)
-        user_apps.map((app) => {
-          drawer_items.push(
-            <ListItem
-              key={`${app.id}-ListItem`}
-              primaryText={app.title}
-              secondaryText={app.web_url}
-              value={`/dashboard/apps/${app.id}`}
-              leftAvatar={AppAvatar(app)}
-              key={"dashboard-apps-"+app.id}
-            />
-          )
-        })
+        if(drawer_ready) {
+          user_apps.map((app) => {
+            drawer_items.push(
+              <ListItem
+                key={`${app.id}-ListItem`}
+                primaryText={app.title}
+                secondaryText={app.web_url}
+                value={`/dashboard/apps/${app.id}`}
+                leftAvatar={AppAvatar(app)}
+                key={"dashboard-apps-"+app.id}
+              />
+            )
+          })
+        } else {
+          drawer_items.push(dmi.BUSY_APPS)
+        }
         break;
       case '/dashboard/apps/<app-selected>':
         drawer_items = []
@@ -235,6 +255,12 @@ class DrawerMenu extends React.Component {
         drawer_items.push(dmi.DASHBOARD)
         drawer_items.push(<ListItem key="loading" value="#" disabled={true} leftIcon={<CircularProgress style={styles.listLeftCircularProgress} size={0.3}/>} />)
     }
+    //
+    drawer_items.push(
+      <span style={styles.drawerVersion} key="subheader-version">
+        Appgain.io Dashboard v{VERSION}
+      </span>
+    )
 
 
     return (

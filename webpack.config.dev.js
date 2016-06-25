@@ -23,7 +23,12 @@ export default {
   plugins: [
     new webpack.DefinePlugin(GLOBALS), // Tells React to build in prod mode. https://facebook.github.io/react/downloads.htmlnew webpack.HotModuleReplacementPlugin())
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    // You can use the DefinePlugin to inject this information into the bundle
+    // https://github.com/webpack/webpack/issues/237#issuecomment-40398916
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version)
+    })
   ],
   module: {
     loaders: [

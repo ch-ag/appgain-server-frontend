@@ -24,7 +24,13 @@ export default {
     new webpack.DefinePlugin(GLOBALS), // Tells React to build in prod mode. https://facebook.github.io/react/downloads.html
     new ExtractTextPlugin('styles.css'),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    // You can use the DefinePlugin to inject this information into the bundle
+    // https://github.com/webpack/webpack/issues/237#issuecomment-40398916
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("package.json").version)
+    })
+
   ],
   module: {
     loaders: [
