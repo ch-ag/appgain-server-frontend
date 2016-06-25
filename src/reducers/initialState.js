@@ -1,10 +1,7 @@
-import {loadState} from '../store/localStore'
-
-const {user_creds, current_user} = loadState()
 
 export default {
-  user_creds,
-  current_user,
-  user_suits: [],
+  user_creds: null,
+  current_user: null,
+  user_suits: null,
   showProgress: false
 }

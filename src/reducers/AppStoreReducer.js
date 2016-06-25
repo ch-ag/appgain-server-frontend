@@ -8,6 +8,13 @@ export default function userLoginReducer(state = initialState, action) {
 
   console.log("userLoginReducer: ", action);
   switch (action.type) {
+    case ActionTypes.LOAD_LOCAL_STATE:
+      return Object.assign(
+        {},
+        state,
+        action.localstate,
+        {showProgress: false}
+      )
     case ActionTypes.LOGIN_START:
       return Object.assign(
         {},

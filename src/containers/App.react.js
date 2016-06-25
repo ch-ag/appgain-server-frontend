@@ -12,7 +12,6 @@ import LinearProgress from 'material-ui/LinearProgress'
 
 import * as actions from '../actions/AppgainActions'
 
-
 const styles = {
   LinearProgress: {
     backgroundColor:'transparent',
@@ -53,6 +52,8 @@ class App extends React.Component {
     // this.state = {
     //   showBusy: true
     // }
+
+    this.props.actions.loadLocalState()
 
   }
 

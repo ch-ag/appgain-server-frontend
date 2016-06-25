@@ -3,12 +3,13 @@ import {getFromLcoalState, saveToLcoalState} from '../store/localStore'
 
 
 export function loadLocalState() {
-
   return {
     type: 'LOAD_LOCAL_STATE',
-    user_creds: getFromLcoalState('user_creds'),
-    current_user: getFromLcoalState('current_user'),
-    user_suits: getFromLcoalState('user_suits')
+    localstate: {
+      user_creds: getFromLcoalState('user_creds'),
+      current_user: getFromLcoalState('current_user'),
+      user_suits: getFromLcoalState('user_suits')
+    }
   }
 }
 
