@@ -1,7 +1,7 @@
 
 export default {
-  user_creds: null,
-  current_user: null,
-  user_suits: null,
+  user_creds: undefined,
+  current_user: undefined,
+  user_suits: undefined,
   showProgress: false
 }

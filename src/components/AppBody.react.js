@@ -16,7 +16,8 @@ const style = (() => {
   return {
     width: body_width - 4 +'%',
     marginLeft: app_drawer_width, //(100 - body_width + 2 ) + '%',
-    marginTop: 30
+    marginTop: 90,
+    marginBottom:'30vh',
   }
 })()
 
