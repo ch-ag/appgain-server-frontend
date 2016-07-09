@@ -6,13 +6,13 @@ const emptystore = {
 }
 
 
-export const getFromLcoalState = (key) => {
+export const getFromLocalState = (key) => {
   try {
     const serializedState = localStorage.getItem(key)
 
     if(serializedState === null){
       console.log(
-        "local_state:getFromLcoalState:  emptystore",
+        "local_state:getFromLocalState:  emptystore",
         key,
         typeof serializedState,
         serializedState
@@ -25,11 +25,11 @@ export const getFromLcoalState = (key) => {
     const __local_state = JSON.parse(serializedState)
 
     console.log(
-      "local_state:getFromLcoalState: loaded", __local_state);
+      "local_state:getFromLocalState: loaded", __local_state);
     return __local_state
 
   } catch (e) {
-    console.log("local_state:getFromLcoalState: error", e);
+    console.log("local_state:getFromLocalState: error", e);
     return undefined
   }
 }

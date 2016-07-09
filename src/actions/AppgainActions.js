@@ -1,14 +1,14 @@
 import * as ActionTypes from './actionTypes'
-import {getFromLcoalState, saveToLcoalState} from '../store/localStore'
+import {getFromLocalState, saveToLcoalState} from '../store/localStore'
 
 
 export function loadLocalState() {
   return {
     type: 'LOAD_LOCAL_STATE',
     localstate: {
-      user_creds: getFromLcoalState('user_creds'),
-      current_user: getFromLcoalState('current_user'),
-      user_suits: getFromLcoalState('user_suits')
+      user_creds: getFromLocalState('user_creds'),
+      current_user: getFromLocalState('current_user'),
+      user_suits: getFromLocalState('user_suits')
     }
   }
 }
@@ -30,6 +30,9 @@ export function loginStart(user_creds) {
 
 export function loginSuccess(current_user) {
   saveToLcoalState({current_user})
+
+  console.log('Action: loginSuccess: current_user:', current_user);
+
   return {
     type: ActionTypes.LOGIN_SUCCESS,
     current_user,
