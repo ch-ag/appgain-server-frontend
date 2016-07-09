@@ -28,7 +28,7 @@ export default {
     // You can use the DefinePlugin to inject this information into the bundle
     // https://github.com/webpack/webpack/issues/237#issuecomment-40398916
     new webpack.DefinePlugin({
-      VERSION: JSON.stringify(require("package.json").version)
+      VERSION: JSON.stringify(require("./package.json").version)
     })
 
   ],
