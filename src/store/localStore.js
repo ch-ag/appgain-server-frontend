@@ -1,8 +1,8 @@
 const statelabel = 'agcpstate'
 
 const emptystore = {
-  user_creds: null,
-  current_user: null,
+  user_creds: undefined,
+  current_user: undefined,
 }
 
 
