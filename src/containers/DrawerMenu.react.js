@@ -1,8 +1,11 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import {Link} from 'react-router'
 import md5 from 'js-md5'
 
+
+import {NAV_ROUTES} from '../constants/appgainConstants'
 import {blue500, yellow600} from 'material-ui/styles/colors';
 import * as Colors from 'material-ui/styles/colors';
 import {List, ListItem, MakeSelectable} from 'material-ui/List'
@@ -12,6 +15,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer'
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Subheader from 'material-ui/Subheader';
@@ -23,6 +27,10 @@ import SVGNavigationApps from 'material-ui/svg-icons/navigation/apps'
 import SVGNavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import SVGSocialNotificationsActive from 'material-ui/svg-icons/social/notifications-active'
 import SVGSocialPersonOutline from 'material-ui/svg-icons/social/person-outline'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import SVGContentAdd from 'material-ui/svg-icons/content/add';
+import IconButton from 'material-ui/IconButton';
+
 
 import * as actions from '../actions/AppgainActions'
 
@@ -90,24 +98,12 @@ class DrawerMenu extends React.Component {
     let selected_app = null
     let app_location = null
 
-    const re_app_select = /^\/dashboard\/apps\/([\w\d-_]+)((\/([\w\d-_]+))*)\/?$/
-    const has_app_select = re_app_select.exec(drawer_view)
-    console.log("has_app_select: ", typeof has_app_select, has_app_select);
-
-    if(has_app_select !== null && drawer_ready){
-      drawer_view = '/dashboard/apps/<app-selected>'
-
-      let app_select_id = has_app_select[1]
-
-      app_location = has_app_select[2]
-
-      for(let ndx in user_apps){
-        if(user_apps[ndx].id == app_select_id) {
-          selected_app = user_apps[ndx]
-        }
+    let app_select_id = this.props.params.app_id
+    for(let ndx in user_apps) {
+      if(user_apps[ndx].id == app_select_id) {
+        selected_app = user_apps[ndx]
+        drawer_view = '/dashboard/apps/<app-selected>'
       }
-
-      console.log('app_select_id', app_select_id);
     }
 
     let getNameInitials = (name, limit = 3)=>{
@@ -168,7 +164,7 @@ class DrawerMenu extends React.Component {
       BACK_DASHBOARD: (<ListItem key="dashboard" value="/dashboard" primaryText="Dashboard" leftIcon={<SVGNavigationArrowBack/>} />),
       APPS: (<ListItem key="dashboard-apps" value="/dashboard/apps" primaryText="Apps" leftIcon={<SVGNavigationApps />} />),
       BACK_APPS: (<ListItem key="dashboard-apps" value="/dashboard/apps" primaryText="Apps" leftIcon={<SVGNavigationArrowBack />} />),
-      BUSY_APPS: (<ListItem key="dashboard-app-busy" value="#" disabled={true} primaryText="Apps" leftIcon={<SVGNavigationApps />} rightIcon={<CircularProgress style={styles.listLeftCircularProgress} size={0.3}/>} />),
+      BUSY_APPS: (<ListItem key="dashboard-app-busy" value="#" disabled={true} primaryText="Your Apps" leftIcon={<CircularProgress style={styles.listLeftCircularProgress} size={0.3}/>} />),
       PROFILE: (<ListItem style={styles.drawerProfile} key="dashboard-profile" value="/dashboard/profile" primaryText="Profile" secondaryText={the_current_user.email} leftIcon={UserAvatar(the_current_user)} />),
       SUPPORT: (<ListItem key="dashboard-support" value="/dashboard/support" primaryText="Support" leftIcon={<SVGSocialPersonOutline />} />),
     }
@@ -206,19 +202,33 @@ class DrawerMenu extends React.Component {
         // drawer_items.push(dmi.PROFILE)
 
         break;
+      case '/dashboard/apps/new':
       case '/dashboard/apps':
         drawer_items = []
         drawer_items.push(dmi.BACK_DASHBOARD)
         drawer_items.push(<Divider key="divider-dashboard-apps"/>)
-        drawer_items.push(<Subheader key="subheader-dashboard-apps">Your Apps</Subheader>)
         if(drawer_ready) {
+          drawer_items.push(
+            <Subheader key="subheader-dashboard-apps">
+              <span>Your Apps</span>
+              <span style={{float:'right',marginRight: '0px', }}>
+                <Link to={NAV_ROUTES.CREATE_APP}>
+                  <IconButton
+                    href={NAV_ROUTES.CREATE_APP}
+                  >
+                    <SVGContentAdd />
+                  </IconButton>
+                </Link>
+              </span>
+            </Subheader>
+          )
           user_apps.map((app) => {
             drawer_items.push(
               <ListItem
                 key={`${app.id}-ListItem`}
                 primaryText={app.title}
                 secondaryText={app.web_url}
-                value={`/dashboard/apps/${app.id}`}
+                value={`/dashboard/apps/_${app.id}`}
                 leftAvatar={AppAvatar(app)}
                 key={"dashboard-apps-"+app.id}
               />
@@ -234,7 +244,7 @@ class DrawerMenu extends React.Component {
         drawer_items.push(<Divider />)
         drawer_items.push(<ListItem
           leftAvatar={AppAvatar(selected_app)}
-          value={`/dashboard/apps/${selected_app.id}`}
+          value={`/dashboard/apps/_${selected_app.id}`}
           primaryText={selected_app.title}
           secondaryText={selected_app.web_url}
         />)
@@ -245,7 +255,7 @@ class DrawerMenu extends React.Component {
             secondaryText="Send Push Notification"
             key="dashboard-app-push"
             leftIcon={<SVGSocialNotificationsActive/>}
-            value={`/dashboard/apps/${selected_app.id}/push`}
+            value={`/dashboard/apps/_${selected_app.id}/push`}
           />
         )
 
@@ -275,6 +285,10 @@ class DrawerMenu extends React.Component {
       </Drawer>
     )
   }
+}
+
+DrawerMenu.contextTypes = {
+  router: PropTypes.object.isRequired
 }
 
 
