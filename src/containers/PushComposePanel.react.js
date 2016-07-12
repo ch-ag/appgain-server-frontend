@@ -135,6 +135,7 @@ class ParseSechueler extends React.Component {
       <div style={{marginLeft:0}}>
         <br/>
         <Toggle
+          disabled
           name="tz"
           label="Respect User Time Zone?"
           style={{width:250}}
@@ -161,7 +162,7 @@ class ParseSechueler extends React.Component {
 }
 
 
-const ParseAppInitialState = {
+const PushPanelInitialState = {
   push_submit_disabled: false,
   push_clear_disabled: false,
   push_message_chars: 100,
@@ -173,31 +174,32 @@ const ParseAppInitialState = {
   selected_app: null
 }
 
-class ParseApp extends React.Component {
+
+class PushPanel extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.submitForm = this.submitForm.bind(this)
-    this.pushMessageCount = this.pushMessageCount.bind(this)
     this.handelAppBadgeToggle = this.handelAppBadgeToggle.bind(this)
+    this.handleParseSechueler = this.handleParseSechueler.bind(this)
+    this.pushMessageCount = this.pushMessageCount.bind(this)
+    this.resetForm = this.resetForm.bind(this)
+    this.sendPushFaild = this.sendPushFaild.bind(this)
     this.sendPushStart = this.sendPushStart.bind(this)
     this.sendPushSuccess = this.sendPushSuccess.bind(this)
-    this.sendPushFaild = this.sendPushFaild.bind(this)
+    this.submitForm = this.submitForm.bind(this)
     this.togglePushScheded = this.togglePushScheded.bind(this)
-    this.handleParseSechueler = this.handleParseSechueler.bind(this)
-    this.resetForm = this.resetForm.bind(this)
 
-    ParseAppInitialState.selected_app = this.getSelectedApp()
+    PushPanelInitialState.selected_app = this.props.params.app_id
     this.state = Object.assign(
       {},
-      ParseAppInitialState
+      PushPanelInitialState
     )
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
-      selected_app: this.getSelectedApp()
+      selected_app: this.props.params.app_id
     })
   }
 
@@ -226,13 +228,41 @@ class ParseApp extends React.Component {
   }
 
   resetForm() {
-    console.log("<<resetForm>>", this.refs)
+    console.log("<<resetForm>> refs",
+      this.refs,
+      this.refs.push_message,
+      this.refs.push_inc)
 
-    const selected_app = this.state
-    this.setState(
-      Object.assign({}, ParseAppInitialState, {selected_app})
-    );
-    console.log("<<resetForm>>", ParseAppInitialState)
+    console.log('<<resetForm>> ', this.refs.push_form.reset({
+      push_message: '',
+      push_link: '',
+      push_badge_inc: false,
+      push_scheded_toggle: false
+    }));
+
+    this.refs.push_message.setState({value:''})
+    this.refs.push_link.setState({value:''})
+    this.refs.push_inc.setState({switched:false})
+    this.refs.push_scheded_toggle.setState({switched:false})
+    this.setState({push_scheded: false})
+
+    let __alter_ = () => { return (<span>
+      <CircularProgress size={0.5}/>
+      <span style={{top:'-20px',position:'relative'}}>
+        Sending Push
+      </span>
+    </span>)}
+    Alert.info(__alter_(), {
+        position: 'top-right',
+        effect: 'slide',
+    });
+
+    // console.log("<<resetForm>>  this.forceUpdate()", this.forceUpdate())
+    // const selected_app = this.state
+    // this.setState(
+    //   Object.assign({}, PushPanelInitialState, {selected_app})
+    // );
+    // console.log("<<resetForm>>", PushPanelInitialState)
   }
 
   togglePushScheded() {
@@ -259,7 +289,6 @@ class ParseApp extends React.Component {
     console.log("handleParseSechueler: ", push_time);
   }
 
-
   pushMessageCount(data){
     const char_count = data.target.value.length
     console.log("pushMessageCount", char_count)
@@ -283,11 +312,9 @@ class ParseApp extends React.Component {
 
   }
 
-  enableButton() {
-  }
+  enableButton() { }
 
-  disableButton() {
-  }
+  disableButton() { }
 
   sendPushStart() {
     console.log('sendPush Started')
@@ -452,7 +479,7 @@ class ParseApp extends React.Component {
         <Card style={{marginLeft:'30px',width:'400px'}}>
           <CardTitle
             title={<span><SVGSocialNotificationsActive/>&nbsp;&nbsp;Push Notification</span>}
-            subtitle={`Send Push Notification for ${selected_app.title} Users`} />
+            subtitle={`Send Push Notification for ${selected_app.name} Users`} />
           <CardText >
             <h4>Write your message</h4>
             <p>The best campaigns use short and direct messaging.</p>
@@ -495,7 +522,7 @@ class ParseApp extends React.Component {
             />
             <br/>
             <Toggle
-              disabled
+              // disabled
               ref="push_scheded_toggle"
               name="push_scheded_toggle"
               label="Scheduled Push?"
@@ -520,6 +547,13 @@ class ParseApp extends React.Component {
               icon={push_scheded && <SVGActionDate/>}
               label={push_scheded ? 'Scheduled Push': 'Send Push'}
             />
+            <RaisedButton
+              //labelColor="#fff"
+              type="reset"
+              //icon={push_scheded && <SVGActionDate/>}
+              label='Reset'
+              onMouseUp={this.resetForm}
+            />
           </CardActions>
         </Card>
       </Formsy.Form>
@@ -527,7 +561,7 @@ class ParseApp extends React.Component {
   }
 }
 
-ParseApp.propTypes = {
+PushPanel.propTypes = {
   children: PropTypes.element,
   user_suits: PropTypes.object.isRequired
 }
@@ -552,7 +586,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ParseApp)
+)(PushPanel)
 
 
 //
