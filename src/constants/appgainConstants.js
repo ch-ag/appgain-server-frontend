@@ -8,6 +8,9 @@ export const NAV_ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   LOGOUT: '/logout',
+  HELP: '/help',
+
   DASHBOARD: '/dashboard',
-  HELP: '/help'
+  USER_APPS: '/dashboard/apps/',
+  CREATE_APP: '/dashboard/apps/new'
 }

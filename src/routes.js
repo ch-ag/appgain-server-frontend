@@ -12,7 +12,8 @@ import App from './containers/App.react'
 import Dashboard from './containers/Dashboard.react'
 import LoginPage from './containers/LoginPage.react'
 import PushComposePanel from './containers/PushComposePanel.react'
-
+import SuitPanel from './containers/SuitPanel.react'
+import AnalyticsPanel from './containers/AnalyticsPanel.react'
 
 export default (
   <Route path="/" component={App}>
@@ -26,8 +27,9 @@ export default (
       <Route path="profile" component={ProfilePage} />
       <Route path="support" component={AboutPage} />
       <Route path="apps" component={AppPage} />
-      <Route path="apps/:app_id">
-        <IndexRoute component={AppPage} />
+      <Route path="apps/new" component={SuitPanel} />
+      <Route path="apps/_:app_id">
+        <IndexRoute component={SuitPanel} />
         <Route path="push" component={PushComposePanel}/>
       </Route>
     </Route>
