@@ -20,8 +20,12 @@ const styles = {
 
   button: {
     color: '#fff'
-  }
+  },
 
+  AppBar: {
+    position: 'fixed',
+    top: 0,
+  }
 }
 
 class Dashboard extends React.Component {
@@ -29,9 +33,14 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
 
+    const {params, location} = this.props
+
+    console.log('route params', params, location)
+
     this.state = {
       usrSuits: null,
-      drawerOpen: true
+      drawerOpen: true,
+      current_suit_id: params ? params.app_id : undefined
     }
 
     this.toggleDrawer = this.toggleDrawer.bind(this)
@@ -115,11 +124,12 @@ class Dashboard extends React.Component {
 
   render() {
 
-    const {location} = this.props
+    const {params, location} = this.props
 
     return (
       <div>
         <AppBar
+          style={styles.AppBar}
           onLeftIconButtonTouchTap={this.toggleDrawer}
           title={<span>Appgain.io</span>}
           iconElementRight={
@@ -151,16 +161,19 @@ class Dashboard extends React.Component {
             </div>
           }
         />
-      <DrawerMenu
-        drawerOpen={this.state.drawerOpen}
-        user_apps={this.getUserSuits()}
-        router={this.context.router}
-        onNavChange={this.handleNavChangeList}
-        location={location}
-      />
-      <AppBody>
-        {this.props.children}
-      </AppBody>
+        <DrawerMenu
+          drawerOpen={this.state.drawerOpen}
+          user_apps={this.getUserSuits()}
+          router={this.context.router}
+          onNavChange={this.handleNavChangeList}
+          location={location}
+          params={params}
+        />
+      <div >
+        <AppBody>
+          {this.props.children}
+        </AppBody>
+      </div>
     </div>
     )
   }
